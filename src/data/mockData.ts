@@ -1,4 +1,3 @@
-
 export type Interest = 
   | "Free Food" 
   | "Career Events" 
@@ -44,7 +43,7 @@ export const mockEvents: Event[] = [
     startTime: "16:30",
     endTime: "19:00",
     interestTags: ["Career Events", "Free Food"],
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9"
+    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c"
   },
   {
     id: "event-2",
@@ -62,6 +61,7 @@ export const mockEvents: Event[] = [
     startTime: "08:00",
     endTime: "09:00",
     interestTags: ["Wellness"],
+    image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b"
   },
   {
     id: "event-3",
@@ -79,6 +79,7 @@ export const mockEvents: Event[] = [
     startTime: "12:00",
     endTime: "15:00",
     interestTags: ["Club Fairs", "Free Food"],
+    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81"
   },
   {
     id: "event-4",
@@ -96,6 +97,7 @@ export const mockEvents: Event[] = [
     startTime: "14:00",
     endTime: "16:00",
     interestTags: ["Academic", "Career Events"],
+    image: "https://images.unsplash.com/photo-1500673922987-e212871fec22"
   },
   {
     id: "event-5",
@@ -131,6 +133,7 @@ export const mockEvents: Event[] = [
     startTime: "08:00",
     endTime: "10:00",
     interestTags: ["Free Food"],
+    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
   },
   {
     id: "event-7",
@@ -148,7 +151,7 @@ export const mockEvents: Event[] = [
     startTime: "17:00",
     endTime: "18:00",
     interestTags: ["Wellness"],
-    image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04"
+    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
   }
 ];
 
