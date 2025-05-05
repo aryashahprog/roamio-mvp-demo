@@ -15,9 +15,9 @@ const Map = () => {
   
   return (
     <div className="min-h-screen pb-16 bg-gray-50">
-      <div className="bg-white p-4 sticky top-0 z-10 shadow-sm">
+      <div className="bg-roamio-blue text-white p-4 sticky top-0 z-10 shadow-sm">
         <h1 className="text-xl font-bold">Campus Map</h1>
-        <p className="text-sm text-gray-500">Find nearby events</p>
+        <p className="text-sm text-white/80">Find nearby events</p>
       </div>
       
       <CampusMap />

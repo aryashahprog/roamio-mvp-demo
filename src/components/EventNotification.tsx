@@ -24,7 +24,7 @@ const EventNotification = () => {
   return (
     <div className="fixed top-0 left-0 right-0 p-4 z-50 animate-fade-in">
       <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
-        <div className="flex items-center justify-between bg-roamio-purple p-3 text-white">
+        <div className="flex items-center justify-between bg-roamio-blue p-3 text-white">
           <h3 className="font-medium">Nearby Event Alert!</h3>
           <button onClick={handleDismiss}>
             <X className="h-5 w-5" />

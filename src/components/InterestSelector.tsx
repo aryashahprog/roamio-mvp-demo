@@ -19,7 +19,7 @@ const InterestSelector = () => {
   return (
     <div className="max-w-md mx-auto px-6 py-8 flex flex-col h-full">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold mb-2">Welcome to Roamio</h1>
+        <h1 className="text-2xl font-bold mb-2 text-roamio-blue">Welcome to Roamio</h1>
         <p className="text-gray-600">Select your interests to personalize your event feed</p>
       </div>
 
@@ -32,7 +32,7 @@ const InterestSelector = () => {
               h-32 rounded-xl flex flex-col items-center justify-center p-4 border-2 transition-all duration-200 
               ${
                 selectedInterests.includes(interest)
-                  ? `border-roamio-purple bg-roamio-softPurple text-roamio-darkPurple`
+                  ? `border-roamio-blue bg-roamio-softBlue text-roamio-darkBlue`
                   : `border-gray-200 bg-white text-gray-700 hover:bg-gray-50`
               }
             `}
@@ -56,7 +56,7 @@ const InterestSelector = () => {
         <Button 
           onClick={handleCompleteOnboarding}
           disabled={selectedInterests.length === 0} 
-          className="w-full py-6 text-lg"
+          className="w-full py-6 text-lg bg-roamio-blue hover:bg-roamio-darkBlue"
         >
           Continue
           <ArrowRight className="ml-2 h-5 w-5" />

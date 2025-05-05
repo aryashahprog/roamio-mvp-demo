@@ -7,7 +7,7 @@ const Navbar = () => {
   
   const getActiveClass = (path: string) => {
     return location.pathname === path 
-      ? "text-roamio-purple" 
+      ? "text-roamio-blue" 
       : "text-gray-500";
   };
 

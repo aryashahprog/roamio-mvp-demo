@@ -65,10 +65,10 @@ export default {
 				},
 				// Roamio specific colors
 				roamio: {
-					purple: '#9b87f5',
-					darkPurple: '#7E69AB',
-					softPurple: '#E5DEFF',
-					softBlue: '#D3E4FD',
+					blue: '#0052FF', // Bright blue from logo
+					lightBlue: '#33C3F0',
+					darkBlue: '#004DE6',
+					softBlue: '#E6F0FF',
 				},
 				interest: {
 					food: '#FF6B6B',
