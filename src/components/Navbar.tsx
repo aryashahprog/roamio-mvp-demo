@@ -1,6 +1,7 @@
 
 import { Link, useLocation } from "react-router-dom";
 import { Home, Map, Bell, User } from "lucide-react";
+import { motion } from "framer-motion";
 
 const Navbar = () => {
   const location = useLocation();
@@ -11,40 +12,84 @@ const Navbar = () => {
       : "text-gray-500";
   };
 
+  const getActiveIndicator = (path: string) => {
+    return location.pathname === path;
+  };
+
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 z-10">
-      <div className="flex justify-around">
-        <Link 
+    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-4 py-2 z-10 shadow-lg">
+      <div className="flex justify-around items-center">
+        <NavItem 
           to="/feed" 
-          className={`flex flex-col items-center ${getActiveClass("/feed")}`}
+          label="Feed"
+          isActive={getActiveClass("/feed") === "text-roamio-blue"}
+          showIndicator={getActiveIndicator("/feed")}
         >
-          <Home className="h-6 w-6" />
-          <span className="text-xs mt-1">Feed</span>
-        </Link>
-        <Link 
+          <Home strokeWidth={2} />
+        </NavItem>
+        
+        <NavItem 
           to="/map" 
-          className={`flex flex-col items-center ${getActiveClass("/map")}`}
+          label="Map"
+          isActive={getActiveClass("/map") === "text-roamio-blue"}
+          showIndicator={getActiveIndicator("/map")}
         >
-          <Map className="h-6 w-6" />
-          <span className="text-xs mt-1">Map</span>
-        </Link>
-        <Link 
+          <Map strokeWidth={2} />
+        </NavItem>
+        
+        <NavItem 
           to="/notifications" 
-          className={`flex flex-col items-center ${getActiveClass("/notifications")}`}
+          label="Alerts"
+          isActive={getActiveClass("/notifications") === "text-roamio-blue"}
+          showIndicator={getActiveIndicator("/notifications")}
         >
-          <Bell className="h-6 w-6" />
-          <span className="text-xs mt-1">Notifications</span>
-        </Link>
-        <Link 
+          <Bell strokeWidth={2} />
+        </NavItem>
+        
+        <NavItem 
           to="/profile" 
-          className={`flex flex-col items-center ${getActiveClass("/profile")}`}
+          label="Profile"
+          isActive={getActiveClass("/profile") === "text-roamio-blue"}
+          showIndicator={getActiveIndicator("/profile")}
         >
-          <User className="h-6 w-6" />
-          <span className="text-xs mt-1">Profile</span>
-        </Link>
+          <User strokeWidth={2} />
+        </NavItem>
       </div>
     </div>
   );
 };
+
+interface NavItemProps {
+  to: string;
+  label: string;
+  isActive: boolean;
+  showIndicator: boolean;
+  children: React.ReactNode;
+}
+
+const NavItem = ({ to, label, isActive, showIndicator, children }: NavItemProps) => (
+  <Link 
+    to={to} 
+    className="flex flex-col items-center relative pt-2"
+  >
+    <motion.div 
+      whileTap={{ scale: 0.9 }}
+      className={`flex flex-col items-center w-16 py-1 ${isActive ? "text-roamio-blue" : "text-gray-500"}`}
+    >
+      <div className="h-6 w-6 mb-1">
+        {children}
+      </div>
+      <span className="text-xs font-medium">{label}</span>
+    </motion.div>
+    {showIndicator && (
+      <motion.div 
+        layoutId="nav-indicator"
+        className="absolute -top-2 w-1.5 h-1.5 rounded-full bg-roamio-blue"
+        initial={false}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      />
+    )}
+  </Link>
+);
 
 export default Navbar;
