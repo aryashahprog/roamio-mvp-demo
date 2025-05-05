@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import EventCard, { EventCardSkeleton } from "./EventCard";
 import { useAppContext } from "@/contexts/AppContext";
 import { Button } from "@/components/ui/button";
-import { interestOptions, Interest } from "@/data/mockData";
-import { SlidersHorizontal } from "lucide-react";
+import { interestOptions } from "@/data/mockData";
+import { SlidersHorizontal, Calendar } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const EventFeed = () => {
