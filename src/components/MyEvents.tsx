@@ -47,7 +47,7 @@ const MyEvents = () => {
                   </div>
                 </CardHeader>
                 <CardContent className="pb-2 text-sm">
-                  <p className="text-gray-600">{event.location}</p>
+                  <p className="text-gray-600">{event.location.building}, {event.location.room}</p>
                 </CardContent>
                 <CardFooter className="pt-0 flex-wrap gap-2">
                   {event.interestTags.map(tag => (
@@ -81,7 +81,7 @@ const MyEvents = () => {
                   </div>
                 </CardHeader>
                 <CardContent className="pb-2">
-                  <p className="text-sm text-gray-600">{event.location}</p>
+                  <p className="text-sm text-gray-600">{event.location.building}, {event.location.room}</p>
                   <p className="text-xs mt-1 text-green-600">
                     Checked in: {checkedInEvents[event.id]}
                   </p>
