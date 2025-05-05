@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from "react-router-dom";
-import { Home, Map, Bell } from "lucide-react";
+import { Home, Map, Bell, User } from "lucide-react";
 
 const Navbar = () => {
   const location = useLocation();
@@ -34,6 +34,13 @@ const Navbar = () => {
         >
           <Bell className="h-6 w-6" />
           <span className="text-xs mt-1">Notifications</span>
+        </Link>
+        <Link 
+          to="/profile" 
+          className={`flex flex-col items-center ${getActiveClass("/profile")}`}
+        >
+          <User className="h-6 w-6" />
+          <span className="text-xs mt-1">Profile</span>
         </Link>
       </div>
     </div>

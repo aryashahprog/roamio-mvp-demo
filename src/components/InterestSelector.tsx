@@ -5,7 +5,11 @@ import { useAppContext } from "@/contexts/AppContext";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const InterestSelector = () => {
+interface InterestSelectorProps {
+  compact?: boolean;
+}
+
+const InterestSelector = ({ compact = false }: InterestSelectorProps) => {
   const { selectedInterests, toggleInterest, setOnboardingComplete } = useAppContext();
   const navigate = useNavigate();
 
@@ -17,19 +21,21 @@ const InterestSelector = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto px-6 py-8 flex flex-col h-full">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold mb-2 text-roamio-blue">Welcome to Roamio</h1>
-        <p className="text-gray-600">Select your interests to personalize your event feed</p>
-      </div>
+    <div className={`max-w-md mx-auto px-6 py-${compact ? '2' : '8'} flex flex-col h-full`}>
+      {!compact && (
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold mb-2 text-roamio-blue">Welcome to Roamio</h1>
+          <p className="text-gray-600">Select your interests to personalize your event feed</p>
+        </div>
+      )}
 
-      <div className="grid grid-cols-2 gap-4 mb-12">
+      <div className={`grid grid-cols-2 gap-4 ${compact ? 'mb-4' : 'mb-12'}`}>
         {interestOptions.map((interest) => (
           <button
             key={interest}
             onClick={() => toggleInterest(interest)}
             className={`
-              h-32 rounded-xl flex flex-col items-center justify-center p-4 border-2 transition-all duration-200 
+              ${compact ? 'h-20' : 'h-32'} rounded-xl flex flex-col items-center justify-center p-4 border-2 transition-all duration-200 
               ${
                 selectedInterests.includes(interest)
                   ? `border-roamio-blue bg-roamio-softBlue text-roamio-darkBlue`
@@ -38,7 +44,7 @@ const InterestSelector = () => {
             `}
           >
             <div 
-              className={`w-10 h-10 rounded-full mb-2 flex items-center justify-center ${getInterestTagClass(interest)}`}
+              className={`${compact ? 'w-8 h-8' : 'w-10 h-10'} rounded-full mb-2 flex items-center justify-center ${getInterestTagClass(interest)}`}
             >
               {interest === "Free Food" && "🍕"}
               {interest === "Career Events" && "💼"}
@@ -47,21 +53,23 @@ const InterestSelector = () => {
               {interest === "Music" && "🎵"}
               {interest === "Academic" && "📚"}
             </div>
-            <span className="text-sm font-medium text-center">{interest}</span>
+            <span className={`${compact ? 'text-xs' : 'text-sm'} font-medium text-center`}>{interest}</span>
           </button>
         ))}
       </div>
 
-      <div className="mt-auto">
-        <Button 
-          onClick={handleCompleteOnboarding}
-          disabled={selectedInterests.length === 0} 
-          className="w-full py-6 text-lg bg-roamio-blue hover:bg-roamio-darkBlue"
-        >
-          Continue
-          <ArrowRight className="ml-2 h-5 w-5" />
-        </Button>
-      </div>
+      {!compact && (
+        <div className="mt-auto">
+          <Button 
+            onClick={handleCompleteOnboarding}
+            disabled={selectedInterests.length === 0} 
+            className="w-full py-6 text-lg bg-roamio-blue hover:bg-roamio-darkBlue"
+          >
+            Continue
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

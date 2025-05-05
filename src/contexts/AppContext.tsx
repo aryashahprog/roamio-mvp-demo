@@ -2,6 +2,18 @@ import { createContext, useContext, useState, ReactNode, useEffect } from "react
 import { mockEvents, Event, Interest } from "../data/mockData";
 import { toast } from "@/components/ui/sonner";
 
+// New interface for user profile data
+interface UserProfile {
+  name: string;
+  year: string;
+  major: string;
+  profilePicture: string;
+  socialLink?: {
+    platform: 'instagram' | 'linkedin';
+    url: string;
+  };
+}
+
 interface AppContextType {
   hasCompletedOnboarding: boolean;
   setOnboardingComplete: (completed: boolean) => void;
@@ -18,6 +30,9 @@ interface AppContextType {
   setShowNotification: (show: boolean) => void;
   notificationEvent: Event | null;
   setNotificationEvent: (event: Event | null) => void;
+  // New user profile properties
+  userProfile: UserProfile;
+  updateUserProfile: (profile: Partial<UserProfile>) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -62,6 +77,17 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   // Notification state
   const [showNotification, setShowNotification] = useState(false);
   const [notificationEvent, setNotificationEvent] = useState<Event | null>(null);
+
+  // Add user profile state
+  const [userProfile, setUserProfile] = useState<UserProfile>(() => {
+    const saved = localStorage.getItem("userProfile");
+    return saved ? JSON.parse(saved) : {
+      name: "",
+      year: "",
+      major: "",
+      profilePicture: "/placeholder.svg",
+    };
+  });
 
   // Set completed onboarding
   const setOnboardingComplete = (completed: boolean) => {
@@ -121,6 +147,17 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  // Add update profile function
+  const updateUserProfile = (profile: Partial<UserProfile>) => {
+    setUserProfile((prev) => {
+      const updated = { ...prev, ...profile };
+      localStorage.setItem("userProfile", JSON.stringify(updated));
+      return updated;
+    });
+    
+    toast.success("Profile updated successfully!");
+  };
+
   // Mock a random notification for nearby event
   useEffect(() => {
     if (hasCompletedOnboarding && events.length > 0) {
@@ -164,7 +201,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     showNotification,
     setShowNotification,
     notificationEvent,
-    setNotificationEvent
+    setNotificationEvent,
+    userProfile,
+    updateUserProfile
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

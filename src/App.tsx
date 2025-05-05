@@ -11,6 +11,7 @@ import Onboarding from "./pages/Onboarding";
 import Feed from "./pages/Feed";
 import Map from "./pages/Map";
 import Notifications from "./pages/Notifications";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/feed" element={<Feed />} />
             <Route path="/map" element={<Map />} />
             <Route path="/notifications" element={<Notifications />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
