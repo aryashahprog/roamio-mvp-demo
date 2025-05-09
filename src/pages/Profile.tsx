@@ -7,7 +7,7 @@ import ProfileForm from "@/components/ProfileForm";
 import MyEvents from "@/components/MyEvents";
 import RecommendedEvents from "@/components/RecommendedEvents";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, Calendar, Heart, Instagram, Linkedin, Bell } from "lucide-react";
+import { User, Calendar, Heart, Instagram, Linkedin, Bell, MessageSquare, Smile } from "lucide-react";
 import InterestSelector from "@/components/InterestSelector";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -124,6 +124,27 @@ const Profile = () => {
                 >
                   <Linkedin size={16} className="mr-2" />
                   <span>Connect LinkedIn</span>
+                </a>
+              </div>
+            </div>
+            
+            {/* Contact section - moved from footer */}
+            <div className="mt-6 p-4 bg-white rounded-lg shadow-sm">
+              <h3 className="text-md font-medium mb-3">Help & Support</h3>
+              <div className="flex flex-col space-y-3">
+                <a 
+                  href="#" 
+                  className="flex items-center text-sm text-gray-700 hover:text-roamio-blue transition-colors"
+                >
+                  <MessageSquare size={16} className="mr-2" />
+                  <span>Contact Us</span>
+                </a>
+                <a 
+                  href="#" 
+                  className="flex items-center text-sm text-gray-700 hover:text-roamio-blue transition-colors"
+                >
+                  <Smile size={16} className="mr-2" />
+                  <span>Send Feedback</span>
                 </a>
               </div>
             </div>
