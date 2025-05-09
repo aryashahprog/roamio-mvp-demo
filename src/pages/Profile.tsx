@@ -40,7 +40,7 @@ const Profile = () => {
   }, [userProfile.name]);
   
   return (
-    <div className="min-h-screen pb-32 bg-gray-50">
+    <div className="min-h-screen pb-24 bg-gray-50">
       <div className="bg-roamio-blue text-white p-4 sticky top-0 z-10 shadow-sm">
         <h1 className="text-xl font-bold">{greeting}</h1>
         <p className="text-sm text-white/80">Manage your information & events</p>
@@ -48,7 +48,7 @@ const Profile = () => {
       
       <div className="p-4">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-6 bg-gray-100">
+          <TabsList className="grid w-full grid-cols-3 mb-5 bg-gray-100">
             <TabsTrigger value="profile" className="flex items-center gap-2">
               <User size={16} />
               <span>Details</span>
@@ -67,11 +67,11 @@ const Profile = () => {
             <ProfileForm />
             
             {/* Recommendations section - Enhanced UI */}
-            <div className="mt-8 bg-white rounded-lg p-5 shadow-sm border border-gray-100">
-              <div className="flex justify-between items-center mb-4">
+            <div className="mt-6 bg-white rounded-lg p-4 shadow-sm border border-gray-100">
+              <div className="flex justify-between items-center mb-3">
                 <div>
                   <h3 className="text-lg font-semibold">Recommended For You</h3>
-                  <p className="text-gray-500 text-sm mt-1">Based on your interests and past activities</p>
+                  <p className="text-gray-500 text-sm">Based on your interests</p>
                 </div>
                 <span className="bg-amber-50 text-amber-600 text-xs py-1 px-2 rounded-full font-medium">
                   New picks!
@@ -81,9 +81,9 @@ const Profile = () => {
             </div>
             
             {/* Settings section */}
-            <div className="mt-8 bg-white rounded-lg p-5 shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold mb-4">Notification Settings</h3>
-              <div className="space-y-5">
+            <div className="mt-6 bg-white rounded-lg p-4 shadow-sm border border-gray-100">
+              <h3 className="text-lg font-semibold mb-3">Notification Settings</h3>
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <Label htmlFor="event-alerts" className="font-medium">Event Alerts</Label>
@@ -111,9 +111,9 @@ const Profile = () => {
             </div>
             
             {/* Social links */}
-            <div className="mt-8 p-5 bg-white rounded-lg shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold mb-4">Social Media</h3>
-              <div className="flex flex-col space-y-4">
+            <div className="mt-6 p-4 bg-white rounded-lg shadow-sm border border-gray-100">
+              <h3 className="text-lg font-semibold mb-3">Social Media</h3>
+              <div className="flex flex-col space-y-3">
                 <a 
                   href={userProfile.socialLink?.platform === 'instagram' ? userProfile.socialLink.url : 'https://instagram.com'}
                   target="_blank" 
@@ -135,10 +135,10 @@ const Profile = () => {
               </div>
             </div>
             
-            {/* Contact section - moved from footer */}
-            <div className="mt-8 p-5 bg-white rounded-lg shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold mb-4">Help & Support</h3>
-              <div className="flex flex-col space-y-4">
+            {/* Contact section */}
+            <div className="mt-6 p-4 bg-white rounded-lg shadow-sm border border-gray-100">
+              <h3 className="text-lg font-semibold mb-3">Help & Support</h3>
+              <div className="flex flex-col space-y-3">
                 <a 
                   href="#" 
                   className="flex items-center text-sm text-gray-700 hover:text-roamio-blue transition-colors"
@@ -162,9 +162,9 @@ const Profile = () => {
           </TabsContent>
 
           <TabsContent value="interests">
-            <div className="bg-white rounded-lg p-5 border border-gray-100 shadow-sm">
+            <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-sm">
               <h3 className="text-lg font-semibold mb-3">Update Your Interests</h3>
-              <p className="text-gray-600 text-sm mb-5">
+              <p className="text-gray-600 text-sm mb-4">
                 Select the types of events you're interested in
               </p>
               <InterestSelector compact />
