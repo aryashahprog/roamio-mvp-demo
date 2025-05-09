@@ -1,16 +1,19 @@
 
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import EventCard, { EventCardSkeleton } from "./EventCard";
 import { useAppContext } from "@/contexts/AppContext";
 import { Button } from "@/components/ui/button";
 import { interestOptions } from "@/data/mockData";
-import { SlidersHorizontal, Calendar } from "lucide-react";
+import { SlidersHorizontal, Calendar, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 
 const EventFeed = () => {
   const { filteredEvents, selectedInterests, toggleInterest } = useAppContext();
   const [showFilters, setShowFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   // Simulate loading state
   useEffect(() => {
@@ -34,8 +37,17 @@ const EventFeed = () => {
     return a.startTime.localeCompare(b.startTime);
   });
 
+  // Featured events first
+  const featuredEvents = sortedEvents.filter(event => event.isFeatured);
+  const regularEvents = sortedEvents.filter(event => !event.isFeatured);
+  const allSortedEvents = [...featuredEvents, ...regularEvents];
+
+  const handleMapClick = () => {
+    navigate("/map");
+  };
+
   return (
-    <div className="px-4 pb-24">
+    <div className="px-4 pb-32">
       {/* Filters toggle */}
       <motion.div 
         initial={{ opacity: 0, y: -10 }}
@@ -85,6 +97,39 @@ const EventFeed = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Map quick access */}
+      <motion.div 
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="mb-6"
+      >
+        <Button 
+          variant="outline" 
+          onClick={handleMapClick}
+          className="w-full flex justify-center items-center bg-white shadow-sm border-gray-100 py-6"
+        >
+          <MapPin className="h-4 w-4 mr-2 text-roamio-blue" />
+          <span>View events on map</span>
+        </Button>
+      </motion.div>
+      
+      {/* Featured events carousel */}
+      {!isLoading && featuredEvents.length > 0 && (
+        <div className="mb-6">
+          <h2 className="font-semibold text-lg mb-3">Featured Events</h2>
+          <Carousel className="w-full">
+            <CarouselContent>
+              {featuredEvents.map((event) => (
+                <CarouselItem key={event.id} className="basis-full md:basis-1/2 lg:basis-1/3">
+                  <EventCard event={event} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        </div>
+      )}
       
       {/* Loading state */}
       {isLoading && (
@@ -98,11 +143,14 @@ const EventFeed = () => {
       {/* Events list */}
       {!isLoading && (
         <>
-          {sortedEvents.length > 0 ? (
-            sortedEvents.map((event) => (
-              <EventCard key={event.id} event={event} />
-            ))
-          ) : (
+          {regularEvents.length > 0 ? (
+            <div>
+              <h2 className="font-semibold text-lg mb-3">All Events</h2>
+              {regularEvents.map((event) => (
+                <EventCard key={event.id} event={event} />
+              ))}
+            </div>
+          ) : featuredEvents.length === 0 && (
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

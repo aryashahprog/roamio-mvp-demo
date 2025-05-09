@@ -1,3 +1,4 @@
+
 export type Interest = 
   | "Free Food" 
   | "Career Events" 
@@ -23,6 +24,8 @@ export interface Event {
   endTime: string;
   interestTags: Interest[];
   image?: string;
+  isFeatured?: boolean;
+  attendees?: number;
 }
 
 // Mock events data
@@ -43,7 +46,9 @@ export const mockEvents: Event[] = [
     startTime: "16:30",
     endTime: "19:00",
     interestTags: ["Career Events", "Free Food"],
-    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c"
+    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
+    isFeatured: true,
+    attendees: 45
   },
   {
     id: "event-2",
@@ -61,7 +66,8 @@ export const mockEvents: Event[] = [
     startTime: "08:00",
     endTime: "09:00",
     interestTags: ["Wellness"],
-    image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b"
+    image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b",
+    attendees: 12
   },
   {
     id: "event-3",
@@ -79,7 +85,9 @@ export const mockEvents: Event[] = [
     startTime: "12:00",
     endTime: "15:00",
     interestTags: ["Club Fairs", "Free Food"],
-    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81"
+    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81",
+    isFeatured: true,
+    attendees: 120
   },
   {
     id: "event-4",
@@ -97,7 +105,8 @@ export const mockEvents: Event[] = [
     startTime: "14:00",
     endTime: "16:00",
     interestTags: ["Academic", "Career Events"],
-    image: "https://images.unsplash.com/photo-1500673922987-e212871fec22"
+    image: "https://images.unsplash.com/photo-1500673922987-e212871fec22",
+    attendees: 75
   },
   {
     id: "event-5",
@@ -115,7 +124,8 @@ export const mockEvents: Event[] = [
     startTime: "19:00",
     endTime: "21:30",
     interestTags: ["Music"],
-    image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05"
+    image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05",
+    attendees: 58
   },
   {
     id: "event-6",
@@ -133,7 +143,8 @@ export const mockEvents: Event[] = [
     startTime: "08:00",
     endTime: "10:00",
     interestTags: ["Free Food"],
-    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+    attendees: 30
   },
   {
     id: "event-7",
@@ -151,7 +162,8 @@ export const mockEvents: Event[] = [
     startTime: "17:00",
     endTime: "18:00",
     interestTags: ["Wellness"],
-    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+    image: "https://images.unsplash.com/photo-1593811167562-9cef47bfc4d7",
+    attendees: 15
   }
 ];
 
@@ -197,4 +209,24 @@ export const formatTime = (timeStr: string): string => {
   const ampm = hour >= 12 ? 'PM' : 'AM';
   const hour12 = hour % 12 || 12;
   return `${hour12}:${minutes} ${ampm}`;
+};
+
+// New function to get appropriate icon for event type
+export const getInterestIcon = (interest: Interest): string => {
+  switch(interest) {
+    case "Free Food":
+      return "🍕";
+    case "Career Events":
+      return "💼";
+    case "Wellness":
+      return "🧘";
+    case "Club Fairs":
+      return "🎪";
+    case "Music":
+      return "🎵";
+    case "Academic":
+      return "📚";
+    default:
+      return "📌";
+  }
 };

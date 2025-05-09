@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { mockEvents, Event, Interest } from "../data/mockData";
 import { toast } from "@/components/ui/sonner";
@@ -30,9 +31,14 @@ interface AppContextType {
   setShowNotification: (show: boolean) => void;
   notificationEvent: Event | null;
   setNotificationEvent: (event: Event | null) => void;
-  // New user profile properties
+  // User profile properties
   userProfile: UserProfile;
   updateUserProfile: (profile: Partial<UserProfile>) => void;
+  // Bookmarks
+  bookmarkedEvents: string[];
+  bookmarkEvent: (eventId: string) => void;
+  // Recommendations
+  recommendedEvents: Event[];
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -77,6 +83,15 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   // Notification state
   const [showNotification, setShowNotification] = useState(false);
   const [notificationEvent, setNotificationEvent] = useState<Event | null>(null);
+
+  // Bookmarks state
+  const [bookmarkedEvents, setBookmarkedEvents] = useState<string[]>(() => {
+    const saved = localStorage.getItem("bookmarkedEvents");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Recommended events
+  const [recommendedEvents, setRecommendedEvents] = useState<Event[]>([]);
 
   // Add user profile state
   const [userProfile, setUserProfile] = useState<UserProfile>(() => {
@@ -147,6 +162,23 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  // Toggle bookmark for an event
+  const bookmarkEvent = (eventId: string) => {
+    setBookmarkedEvents((prev) => {
+      const isBookmarked = prev.includes(eventId);
+      let updated;
+      
+      if (isBookmarked) {
+        updated = prev.filter(id => id !== eventId);
+      } else {
+        updated = [...prev, eventId];
+      }
+      
+      localStorage.setItem("bookmarkedEvents", JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   // Add update profile function
   const updateUserProfile = (profile: Partial<UserProfile>) => {
     setUserProfile((prev) => {
@@ -157,6 +189,42 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     
     toast.success("Profile updated successfully!");
   };
+
+  // Generate recommended events based on interests and past interactions
+  useEffect(() => {
+    if (selectedInterests.length > 0 || Object.keys(rsvpEvents).length > 0) {
+      // Get events that match user interests but aren't already RSVP'd to
+      const interestBasedEvents = events.filter(event => 
+        event.interestTags.some(tag => selectedInterests.includes(tag)) && 
+        !rsvpEvents[event.id]
+      );
+      
+      // Get similar events to those user has RSVP'd to
+      const rsvpEventIds = Object.entries(rsvpEvents)
+        .filter(([_, value]) => value)
+        .map(([id]) => id);
+      
+      const rsvpedEvents = events.filter(event => rsvpEventIds.includes(event.id));
+      
+      const relatedTags = new Set<Interest>();
+      rsvpedEvents.forEach(event => {
+        event.interestTags.forEach(tag => relatedTags.add(tag));
+      });
+      
+      const similarEvents = events.filter(event => 
+        !rsvpEventIds.includes(event.id) && 
+        event.interestTags.some(tag => relatedTags.has(tag))
+      );
+      
+      // Combine and remove duplicates
+      const combined = [...interestBasedEvents, ...similarEvents];
+      const uniqueRecommended = Array.from(
+        new Map(combined.map(event => [event.id, event])).values()
+      ).slice(0, 3); // Limit to 3 recommendations
+      
+      setRecommendedEvents(uniqueRecommended);
+    }
+  }, [selectedInterests, rsvpEvents, events]);
 
   // Mock a random notification for nearby event
   useEffect(() => {
@@ -203,7 +271,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     notificationEvent,
     setNotificationEvent,
     userProfile,
-    updateUserProfile
+    updateUserProfile,
+    bookmarkedEvents,
+    bookmarkEvent,
+    recommendedEvents
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
