@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import { useAppContext } from "@/contexts/AppContext";
 import { Navigate } from "react-router-dom";
@@ -7,22 +7,42 @@ import ProfileForm from "@/components/ProfileForm";
 import MyEvents from "@/components/MyEvents";
 import RecommendedEvents from "@/components/RecommendedEvents";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, Calendar, Heart, Instagram, Linkedin } from "lucide-react";
+import { User, Calendar, Heart, Instagram, Linkedin, Bell } from "lucide-react";
 import InterestSelector from "@/components/InterestSelector";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 const Profile = () => {
   const { hasCompletedOnboarding, userProfile } = useAppContext();
   const [activeTab, setActiveTab] = useState<string>("profile");
+  const [greeting, setGreeting] = useState<string>("");
   
   // Redirect to onboarding if user hasn't completed it
   if (!hasCompletedOnboarding) {
     return <Navigate to="/" replace />;
   }
   
+  // Set greeting based on time of day
+  useEffect(() => {
+    const currentHour = new Date().getHours();
+    let timeGreeting = "Hello";
+    
+    if (currentHour < 12) {
+      timeGreeting = "Good morning";
+    } else if (currentHour < 17) {
+      timeGreeting = "Good afternoon";
+    } else {
+      timeGreeting = "Good evening";
+    }
+    
+    const name = userProfile.name ? `, ${userProfile.name.split(" ")[0]}` : "";
+    setGreeting(`${timeGreeting}${name}!`);
+  }, [userProfile.name]);
+  
   return (
     <div className="min-h-screen pb-32 bg-gray-50">
       <div className="bg-roamio-blue text-white p-4 sticky top-0 z-10 shadow-sm">
-        <h1 className="text-xl font-bold">My Profile</h1>
+        <h1 className="text-xl font-bold">{greeting}</h1>
         <p className="text-sm text-white/80">Manage your information & events</p>
       </div>
       
@@ -51,6 +71,36 @@ const Profile = () => {
               <h3 className="text-lg font-medium mb-3">Recommended For You</h3>
               <p className="text-gray-500 text-sm mb-4">Based on your interests and past activities</p>
               <RecommendedEvents />
+            </div>
+            
+            {/* Settings section */}
+            <div className="mt-6 bg-white rounded-lg p-4 shadow-sm">
+              <h3 className="text-md font-medium mb-3">Notification Settings</h3>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="event-alerts">Event Alerts</Label>
+                    <p className="text-xs text-gray-500">Get notified about events near you</p>
+                  </div>
+                  <Switch id="event-alerts" defaultChecked />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="rsvp-reminders">RSVP Reminders</Label>
+                    <p className="text-xs text-gray-500">Reminders for events you're attending</p>
+                  </div>
+                  <Switch id="rsvp-reminders" defaultChecked />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="new-events">New Recommendations</Label>
+                    <p className="text-xs text-gray-500">Notifications about recommended events</p>
+                  </div>
+                  <Switch id="new-events" />
+                </div>
+              </div>
             </div>
             
             {/* Social links */}

@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { mockEvents, Event, Interest } from "../data/mockData";
 import { toast } from "@/components/ui/sonner";
@@ -39,6 +38,9 @@ interface AppContextType {
   bookmarkEvent: (eventId: string) => void;
   // Recommendations
   recommendedEvents: Event[];
+  // Event reminders
+  eventReminders: string[];
+  toggleEventReminder: (eventId: string) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -87,6 +89,12 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   // Bookmarks state
   const [bookmarkedEvents, setBookmarkedEvents] = useState<string[]>(() => {
     const saved = localStorage.getItem("bookmarkedEvents");
+    return saved ? JSON.parse(saved) : [];
+  });
+  
+  // Event reminders state
+  const [eventReminders, setEventReminders] = useState<string[]>(() => {
+    const saved = localStorage.getItem("eventReminders");
     return saved ? JSON.parse(saved) : [];
   });
 
@@ -175,6 +183,23 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       }
       
       localStorage.setItem("bookmarkedEvents", JSON.stringify(updated));
+      return updated;
+    });
+  };
+  
+  // Toggle event reminder
+  const toggleEventReminder = (eventId: string) => {
+    setEventReminders((prev) => {
+      const isReminded = prev.includes(eventId);
+      let updated;
+      
+      if (isReminded) {
+        updated = prev.filter(id => id !== eventId);
+      } else {
+        updated = [...prev, eventId];
+      }
+      
+      localStorage.setItem("eventReminders", JSON.stringify(updated));
       return updated;
     });
   };
@@ -274,7 +299,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     updateUserProfile,
     bookmarkedEvents,
     bookmarkEvent,
-    recommendedEvents
+    recommendedEvents,
+    eventReminders,
+    toggleEventReminder
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

@@ -4,18 +4,39 @@ import { Event } from '@/data/mockData';
 import { useAppContext } from '@/contexts/AppContext';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
-import { CheckCircle, Calendar, MapPin } from 'lucide-react';
+import { CheckCircle, Calendar, MapPin, Bell, BellOff } from 'lucide-react';
 import { formatDate, formatTime, getInterestIcon } from '@/data/mockData';
+import { toast } from '@/components/ui/sonner';
+import { Button } from '@/components/ui/button';
 
 const RecommendedEvents = () => {
-  const { recommendedEvents, toggleRSVP, rsvpEvents } = useAppContext();
+  const { recommendedEvents, toggleRSVP, rsvpEvents, toggleEventReminder, eventReminders } = useAppContext();
   const [loadingRsvp, setLoadingRsvp] = useState<string | null>(null);
+  const [loadingReminder, setLoadingReminder] = useState<string | null>(null);
 
   const handleRsvp = (eventId: string) => {
     setLoadingRsvp(eventId);
     setTimeout(() => {
       toggleRSVP(eventId);
       setLoadingRsvp(null);
+    }, 500);
+  };
+  
+  const handleToggleReminder = (eventId: string) => {
+    setLoadingReminder(eventId);
+    setTimeout(() => {
+      toggleEventReminder(eventId);
+      setLoadingReminder(null);
+      
+      const hasReminder = eventReminders.includes(eventId);
+      toast(
+        hasReminder ? 'Reminder removed' : 'Reminder set!',
+        { 
+          description: hasReminder 
+            ? 'You will not receive notifications for this event' 
+            : 'You will be notified before this event starts'
+        }
+      );
     }, 500);
   };
 
@@ -33,6 +54,7 @@ const RecommendedEvents = () => {
     <div className="space-y-3">
       {recommendedEvents.map((event) => {
         const isRsvped = !!rsvpEvents[event.id];
+        const hasReminder = eventReminders.includes(event.id);
         
         return (
           <motion.div
@@ -73,8 +95,8 @@ const RecommendedEvents = () => {
                 </div>
               </div>
               
-              {/* RSVP button */}
-              <div className="flex items-center pr-3">
+              {/* Action buttons */}
+              <div className="flex flex-col justify-center items-end pr-3 space-y-2">
                 <motion.button
                   whileTap={{ scale: 0.9 }}
                   onClick={() => handleRsvp(event.id)}
@@ -96,6 +118,22 @@ const RecommendedEvents = () => {
                     "RSVP"
                   )}
                 </motion.button>
+                
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => handleToggleReminder(event.id)}
+                  className="text-xs p-1 rounded-full"
+                  disabled={loadingReminder === event.id}
+                  title={hasReminder ? "Remove reminder" : "Set reminder"}
+                >
+                  {loadingReminder === event.id ? (
+                    <div className="h-3 w-3 border-2 border-t-transparent rounded-full animate-spin" />
+                  ) : hasReminder ? (
+                    <Bell className="h-4 w-4 text-amber-500" />
+                  ) : (
+                    <BellOff className="h-4 w-4 text-gray-400" />
+                  )}
+                </motion.button>
               </div>
               
               {/* Interest tags */}
@@ -115,6 +153,12 @@ const RecommendedEvents = () => {
           </motion.div>
         );
       })}
+      
+      {recommendedEvents.length > 0 && (
+        <Button variant="ghost" className="w-full text-xs text-gray-500">
+          Show more recommendations
+        </Button>
+      )}
     </div>
   );
 };
