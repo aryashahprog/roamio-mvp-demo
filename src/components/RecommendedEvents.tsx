@@ -42,16 +42,16 @@ const RecommendedEvents = () => {
 
   if (recommendedEvents.length === 0) {
     return (
-      <div className="text-center py-6 bg-white rounded-lg shadow-sm">
-        <Calendar className="mx-auto h-10 w-10 text-gray-300" />
-        <p className="text-gray-500 mt-2">No recommendations yet</p>
-        <p className="text-xs text-gray-400">Try selecting more interests</p>
+      <div className="text-center py-8 bg-gray-50 rounded-lg border border-gray-100">
+        <Calendar className="mx-auto h-12 w-12 text-gray-300" />
+        <p className="text-gray-500 mt-3 font-medium">No recommendations yet</p>
+        <p className="text-sm text-gray-400 mt-1">Try selecting more interests</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {recommendedEvents.map((event) => {
         const isRsvped = !!rsvpEvents[event.id];
         const hasReminder = eventReminders.includes(event.id);
@@ -62,12 +62,14 @@ const RecommendedEvents = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.2 }}
             className="relative"
           >
-            <Card className="flex overflow-hidden h-24 border-none shadow-sm">
+            <Card className="flex overflow-hidden h-28 border-gray-100 shadow hover:shadow-md transition-shadow">
               {/* Event image */}
               {event.image ? (
-                <div className="w-24 h-full">
+                <div className="w-28 h-full">
                   <img
                     src={event.image}
                     alt={event.title}
@@ -75,7 +77,7 @@ const RecommendedEvents = () => {
                   />
                 </div>
               ) : (
-                <div className="w-24 h-full bg-gray-100 flex items-center justify-center">
+                <div className="w-28 h-full bg-gray-100 flex items-center justify-center">
                   <Calendar className="h-8 w-8 text-gray-300" />
                 </div>
               )}
@@ -83,20 +85,38 @@ const RecommendedEvents = () => {
               {/* Event info */}
               <div className="flex-1 flex flex-col justify-between p-3">
                 <div>
-                  <h4 className="font-medium text-sm line-clamp-1">{event.title}</h4>
-                  <div className="flex items-center text-xs text-gray-500 mt-1">
+                  <h4 className="font-semibold text-sm line-clamp-1">{event.title}</h4>
+                  <div className="flex items-center text-xs text-gray-500 mt-1.5">
                     <MapPin className="h-3 w-3 mr-1" />
-                    {event.location.building}
+                    <span className="line-clamp-1">{event.location.building}</span>
                   </div>
-                  <div className="flex items-center text-xs text-gray-500 mt-0.5">
+                  <div className="flex items-center text-xs text-gray-500 mt-1">
                     <Calendar className="h-3 w-3 mr-1" />
                     {formatDate(event.date)} • {formatTime(event.startTime)}
                   </div>
                 </div>
+                
+                {/* Interest tags */}
+                <div className="flex space-x-1.5 mt-1">
+                  {event.interestTags.slice(0, 3).map((tag) => (
+                    <span
+                      key={tag}
+                      className="text-[10px] flex items-center bg-gray-50 px-1.5 py-0.5 rounded-full"
+                    >
+                      <span className="mr-0.5">{getInterestIcon(tag)}</span>
+                      <span className="text-gray-600">{tag}</span>
+                    </span>
+                  ))}
+                  {event.interestTags.length > 3 && (
+                    <span className="text-[10px] text-gray-500">
+                      +{event.interestTags.length - 3}
+                    </span>
+                  )}
+                </div>
               </div>
               
               {/* Action buttons */}
-              <div className="flex flex-col justify-center items-end pr-3 space-y-2">
+              <div className="flex flex-col justify-center items-end pr-3 space-y-3">
                 <motion.button
                   whileTap={{ scale: 0.9 }}
                   onClick={() => handleRsvp(event.id)}
@@ -104,7 +124,7 @@ const RecommendedEvents = () => {
                     isRsvped
                       ? "bg-green-50 text-green-600 border border-green-100"
                       : "bg-roamio-blue text-white"
-                  }`}
+                  } shadow-sm`}
                   disabled={loadingRsvp === event.id}
                 >
                   {loadingRsvp === event.id ? (
@@ -122,7 +142,7 @@ const RecommendedEvents = () => {
                 <motion.button
                   whileTap={{ scale: 0.9 }}
                   onClick={() => handleToggleReminder(event.id)}
-                  className="text-xs p-1 rounded-full"
+                  className={`text-xs p-1.5 rounded-full ${hasReminder ? 'bg-amber-50' : 'hover:bg-gray-50'}`}
                   disabled={loadingReminder === event.id}
                   title={hasReminder ? "Remove reminder" : "Set reminder"}
                 >
@@ -135,28 +155,17 @@ const RecommendedEvents = () => {
                   )}
                 </motion.button>
               </div>
-              
-              {/* Interest tags */}
-              <div className="absolute top-0 left-0 ml-24 mt-1">
-                <div className="flex space-x-1">
-                  {event.interestTags.slice(0, 2).map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-[10px] flex items-center bg-white/90 backdrop-blur-sm px-1.5 py-0.5 rounded-full shadow-sm"
-                    >
-                      <span>{getInterestIcon(tag)}</span>
-                    </span>
-                  ))}
-                </div>
-              </div>
             </Card>
           </motion.div>
         );
       })}
       
       {recommendedEvents.length > 0 && (
-        <Button variant="ghost" className="w-full text-xs text-gray-500">
-          Show more recommendations
+        <Button 
+          variant="outline" 
+          className="w-full mt-2 text-xs font-normal text-gray-600 border-gray-200 hover:bg-gray-50"
+        >
+          View more recommendations
         </Button>
       )}
     </div>

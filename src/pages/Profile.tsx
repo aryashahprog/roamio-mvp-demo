@@ -66,20 +66,27 @@ const Profile = () => {
           <TabsContent value="profile">
             <ProfileForm />
             
-            {/* Recommendations section */}
-            <div className="mt-6 bg-white rounded-lg p-4 shadow-sm">
-              <h3 className="text-lg font-medium mb-3">Recommended For You</h3>
-              <p className="text-gray-500 text-sm mb-4">Based on your interests and past activities</p>
+            {/* Recommendations section - Enhanced UI */}
+            <div className="mt-8 bg-white rounded-lg p-5 shadow-sm border border-gray-100">
+              <div className="flex justify-between items-center mb-4">
+                <div>
+                  <h3 className="text-lg font-semibold">Recommended For You</h3>
+                  <p className="text-gray-500 text-sm mt-1">Based on your interests and past activities</p>
+                </div>
+                <span className="bg-amber-50 text-amber-600 text-xs py-1 px-2 rounded-full font-medium">
+                  New picks!
+                </span>
+              </div>
               <RecommendedEvents />
             </div>
             
             {/* Settings section */}
-            <div className="mt-6 bg-white rounded-lg p-4 shadow-sm">
-              <h3 className="text-md font-medium mb-3">Notification Settings</h3>
-              <div className="space-y-4">
+            <div className="mt-8 bg-white rounded-lg p-5 shadow-sm border border-gray-100">
+              <h3 className="text-lg font-semibold mb-4">Notification Settings</h3>
+              <div className="space-y-5">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label htmlFor="event-alerts">Event Alerts</Label>
+                    <Label htmlFor="event-alerts" className="font-medium">Event Alerts</Label>
                     <p className="text-xs text-gray-500">Get notified about events near you</p>
                   </div>
                   <Switch id="event-alerts" defaultChecked />
@@ -87,7 +94,7 @@ const Profile = () => {
                 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label htmlFor="rsvp-reminders">RSVP Reminders</Label>
+                    <Label htmlFor="rsvp-reminders" className="font-medium">RSVP Reminders</Label>
                     <p className="text-xs text-gray-500">Reminders for events you're attending</p>
                   </div>
                   <Switch id="rsvp-reminders" defaultChecked />
@@ -95,7 +102,7 @@ const Profile = () => {
                 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label htmlFor="new-events">New Recommendations</Label>
+                    <Label htmlFor="new-events" className="font-medium">New Recommendations</Label>
                     <p className="text-xs text-gray-500">Notifications about recommended events</p>
                   </div>
                   <Switch id="new-events" />
@@ -104,16 +111,16 @@ const Profile = () => {
             </div>
             
             {/* Social links */}
-            <div className="mt-6 p-4 bg-white rounded-lg shadow-sm">
-              <h3 className="text-md font-medium mb-3">Social Media</h3>
-              <div className="flex flex-col space-y-3">
+            <div className="mt-8 p-5 bg-white rounded-lg shadow-sm border border-gray-100">
+              <h3 className="text-lg font-semibold mb-4">Social Media</h3>
+              <div className="flex flex-col space-y-4">
                 <a 
                   href={userProfile.socialLink?.platform === 'instagram' ? userProfile.socialLink.url : 'https://instagram.com'}
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="flex items-center text-sm text-gray-700 hover:text-roamio-blue transition-colors"
                 >
-                  <Instagram size={16} className="mr-2" />
+                  <Instagram size={18} className="mr-2" />
                   <span>Connect Instagram</span>
                 </a>
                 <a 
@@ -122,28 +129,28 @@ const Profile = () => {
                   rel="noopener noreferrer" 
                   className="flex items-center text-sm text-gray-700 hover:text-roamio-blue transition-colors"
                 >
-                  <Linkedin size={16} className="mr-2" />
+                  <Linkedin size={18} className="mr-2" />
                   <span>Connect LinkedIn</span>
                 </a>
               </div>
             </div>
             
             {/* Contact section - moved from footer */}
-            <div className="mt-6 p-4 bg-white rounded-lg shadow-sm">
-              <h3 className="text-md font-medium mb-3">Help & Support</h3>
-              <div className="flex flex-col space-y-3">
+            <div className="mt-8 p-5 bg-white rounded-lg shadow-sm border border-gray-100">
+              <h3 className="text-lg font-semibold mb-4">Help & Support</h3>
+              <div className="flex flex-col space-y-4">
                 <a 
                   href="#" 
                   className="flex items-center text-sm text-gray-700 hover:text-roamio-blue transition-colors"
                 >
-                  <MessageSquare size={16} className="mr-2" />
+                  <MessageSquare size={18} className="mr-2" />
                   <span>Contact Us</span>
                 </a>
                 <a 
                   href="#" 
                   className="flex items-center text-sm text-gray-700 hover:text-roamio-blue transition-colors"
                 >
-                  <Smile size={16} className="mr-2" />
+                  <Smile size={18} className="mr-2" />
                   <span>Send Feedback</span>
                 </a>
               </div>
@@ -155,9 +162,9 @@ const Profile = () => {
           </TabsContent>
 
           <TabsContent value="interests">
-            <div className="bg-white rounded-lg p-4 mb-6 shadow-sm">
-              <h3 className="text-lg font-medium mb-3">Update Your Interests</h3>
-              <p className="text-gray-600 text-sm mb-4">
+            <div className="bg-white rounded-lg p-5 border border-gray-100 shadow-sm">
+              <h3 className="text-lg font-semibold mb-3">Update Your Interests</h3>
+              <p className="text-gray-600 text-sm mb-5">
                 Select the types of events you're interested in
               </p>
               <InterestSelector compact />
