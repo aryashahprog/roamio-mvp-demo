@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import EventCard, { EventCardSkeleton } from "./EventCard";
@@ -253,7 +252,8 @@ const EventFeed = () => {
       )}
       
       {/* Add these styles to make the scrollbar hidden */}
-      <style jsx>{`
+      <style>
+        {`
         .hide-scrollbar::-webkit-scrollbar {
           display: none;
         }
@@ -261,7 +261,8 @@ const EventFeed = () => {
           -ms-overflow-style: none;
           scrollbar-width: none;
         }
-      `}</style>
+        `}
+      </style>
     </div>
   );
 };

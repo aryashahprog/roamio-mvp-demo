@@ -6,7 +6,7 @@ import { Navigate } from "react-router-dom";
 import EventNotification from "@/components/EventNotification";
 import { Button } from "@/components/ui/button";
 import { Search, SlidersHorizontal } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
 const Map = () => {
