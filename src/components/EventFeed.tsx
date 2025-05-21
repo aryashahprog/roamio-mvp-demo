@@ -8,11 +8,13 @@ import { interestOptions } from "@/data/mockData";
 import { SlidersHorizontal, Calendar, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import RecommendedEvents from "./RecommendedEvents";
 
 const EventFeed = () => {
   const { filteredEvents, selectedInterests, toggleInterest } = useAppContext();
   const [showFilters, setShowFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeCategory, setActiveCategory] = useState("All");
   const navigate = useNavigate();
 
   // Simulate loading state
@@ -40,11 +42,33 @@ const EventFeed = () => {
   // Featured events first
   const featuredEvents = sortedEvents.filter(event => event.isFeatured);
   const regularEvents = sortedEvents.filter(event => !event.isFeatured);
-  const allSortedEvents = [...featuredEvents, ...regularEvents];
+  
+  // Filtered events based on active category
+  const getFilteredEvents = () => {
+    if (activeCategory === "All") {
+      return regularEvents;
+    }
+    return regularEvents.filter(event => 
+      event.interestTags.includes(activeCategory as any)
+    );
+  };
 
   const handleMapClick = () => {
     navigate("/map");
   };
+
+  // Get today's events
+  const today = new Date();
+  const todayStr = today.toISOString().split('T')[0];
+  const todayEvents = sortedEvents.filter(event => event.date === todayStr);
+
+  // Get this week's events (next 7 days)
+  const nextWeekDate = new Date(today);
+  nextWeekDate.setDate(today.getDate() + 7);
+  const thisWeekEvents = sortedEvents.filter(event => {
+    const eventDate = new Date(event.date);
+    return eventDate > today && eventDate <= nextWeekDate;
+  });
 
   return (
     <div className="px-4 pb-32">
@@ -115,47 +139,101 @@ const EventFeed = () => {
         </Button>
       </motion.div>
       
-      {/* Featured events carousel */}
-      {!isLoading && featuredEvents.length > 0 && (
-        <div className="mb-6">
-          <h2 className="font-semibold text-lg mb-3">Featured Events</h2>
-          <Carousel className="w-full">
-            <CarouselContent>
-              {featuredEvents.map((event) => (
-                <CarouselItem key={event.id} className="basis-full md:basis-1/2 lg:basis-1/3">
-                  <EventCard event={event} />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
+      {/* Recommended Events */}
+      <div className="mb-8">
+        <h2 className="font-semibold text-lg mb-3">Recommended For You</h2>
+        <RecommendedEvents />
+      </div>
+      
+      {/* Today's Events */}
+      {!isLoading && todayEvents.length > 0 && (
+        <div className="mb-8">
+          <h2 className="font-semibold text-lg mb-3">Today</h2>
+          <div className="space-y-4">
+            {todayEvents.map((event) => (
+              <EventCard key={event.id} event={event} />
+            ))}
+          </div>
         </div>
       )}
       
+      {/* This Week's Events */}
+      {!isLoading && thisWeekEvents.length > 0 && (
+        <div className="mb-8">
+          <h2 className="font-semibold text-lg mb-3">This Week</h2>
+          <div className="space-y-4">
+            {thisWeekEvents.slice(0, 3).map((event) => (
+              <EventCard key={event.id} event={event} />
+            ))}
+          </div>
+          {thisWeekEvents.length > 3 && (
+            <Button
+              variant="outline"
+              className="w-full mt-3 text-sm"
+              onClick={() => setActiveCategory("All")}
+            >
+              View {thisWeekEvents.length - 3} more events
+            </Button>
+          )}
+        </div>
+      )}
+      
+      {/* Categories scrollable tab bar */}
+      <div className="sticky top-[72px] bg-gray-50 z-10 py-2 -mx-4 px-4">
+        <div className="flex overflow-x-auto space-x-2 pb-2 hide-scrollbar">
+          <Button
+            variant="ghost"
+            size="sm"
+            className={`flex-shrink-0 rounded-full px-4 ${
+              activeCategory === "All" ? "bg-roamio-blue text-white" : "bg-white border"
+            }`}
+            onClick={() => setActiveCategory("All")}
+          >
+            All
+          </Button>
+          {interestOptions.map((category) => (
+            <Button
+              key={category}
+              variant="ghost"
+              size="sm"
+              className={`flex-shrink-0 rounded-full px-4 ${
+                activeCategory === category ? "bg-roamio-blue text-white" : "bg-white border"
+              }`}
+              onClick={() => setActiveCategory(category)}
+            >
+              {category}
+            </Button>
+          ))}
+        </div>
+      </div>
+      
       {/* Loading state */}
       {isLoading && (
-        <div>
+        <div className="mt-6">
           {[1, 2, 3].map((i) => (
             <EventCardSkeleton key={`skeleton-${i}`} />
           ))}
         </div>
       )}
       
-      {/* Events list */}
+      {/* All/Filtered Events list */}
       {!isLoading && (
         <>
-          {regularEvents.length > 0 ? (
-            <div>
-              <h2 className="font-semibold text-lg mb-3">All Events</h2>
-              {regularEvents.map((event) => (
+          {getFilteredEvents().length > 0 ? (
+            <div className="mt-4">
+              <h2 className="font-semibold text-lg mb-3">
+                {activeCategory === "All" ? "All Events" : activeCategory}
+              </h2>
+              {getFilteredEvents().map((event) => (
                 <EventCard key={event.id} event={event} />
               ))}
             </div>
-          ) : featuredEvents.length === 0 && (
+          ) : (
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className="text-center py-12"
+              className="text-center py-12 mt-4"
             >
               <div className="bg-gray-50 rounded-full w-20 h-20 mx-auto flex items-center justify-center">
                 <Calendar className="h-8 w-8 text-gray-400" />
@@ -173,6 +251,17 @@ const EventFeed = () => {
           )}
         </>
       )}
+      
+      {/* Add these styles to make the scrollbar hidden */}
+      <style jsx>{`
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </div>
   );
 };

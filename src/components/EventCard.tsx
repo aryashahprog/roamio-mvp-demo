@@ -8,12 +8,14 @@ import { ChevronDown, MapPin, Clock, CheckCircle, Users, Calendar, Bookmark, Boo
 import { motion, AnimatePresence } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/sonner";
+import { useNavigate } from "react-router-dom";
 
 interface EventCardProps {
   event: Event;
 }
 
 const EventCard = ({ event }: EventCardProps) => {
+  const navigate = useNavigate();
   const { rsvpEvents, toggleRSVP, checkedInEvents, checkInToEvent, bookmarkEvent, bookmarkedEvents } = useAppContext();
   const [expanded, setExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,7 +39,8 @@ const EventCard = ({ event }: EventCardProps) => {
     return distances[Math.floor(Math.random() * distances.length)];
   };
 
-  const handleRSVP = () => {
+  const handleRSVP = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent navigating to event details when clicking RSVP
     setIsLoading(true);
     
     // Simulate network request
@@ -53,12 +56,21 @@ const EventCard = ({ event }: EventCardProps) => {
   };
 
   const handleBookmark = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent expanding card when clicking bookmark
+    e.stopPropagation(); // Prevent navigating to event details when clicking bookmark
     bookmarkEvent(event.id);
     
     toast.success(isBookmarked ? "Event removed from bookmarks" : "Event saved to bookmarks", {
       duration: 2000
     });
+  };
+
+  const handleShowDetails = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent navigating to event details when expanding the card
+    setExpanded(!expanded);
+  };
+
+  const handleCardClick = () => {
+    navigate(`/event/${event.id}`);
   };
 
   return (
@@ -68,8 +80,9 @@ const EventCard = ({ event }: EventCardProps) => {
       transition={{ duration: 0.4 }}
       className="mb-6"
       layout
+      onClick={handleCardClick}
     >
-      <Card className="overflow-hidden transition-all duration-300 border-none shadow-md hover:shadow-lg relative">
+      <Card className="overflow-hidden transition-all duration-300 border-none shadow-md hover:shadow-lg relative active:scale-[0.99]">
         {event.isFeatured && (
           <div className="absolute top-0 right-0 z-10 bg-gradient-to-l from-amber-500 to-amber-400 text-white px-3 py-1 text-xs font-medium rounded-bl-md">
             Featured
@@ -199,7 +212,7 @@ const EventCard = ({ event }: EventCardProps) => {
             
             {/* Button to expand/collapse */}
             <button 
-              onClick={() => setExpanded(!expanded)} 
+              onClick={handleShowDetails} 
               className="w-full flex items-center justify-center text-sm text-gray-500 py-3 mt-2 hover:text-gray-700"
             >
               {expanded ? 'Show less' : 'Show more'}
@@ -231,7 +244,10 @@ const EventCard = ({ event }: EventCardProps) => {
                 <Button 
                   variant="outline" 
                   className="flex-1 py-5 border-blue-200"
-                  onClick={() => checkInToEvent(event.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    checkInToEvent(event.id);
+                  }}
                 >
                   Check In
                 </Button>

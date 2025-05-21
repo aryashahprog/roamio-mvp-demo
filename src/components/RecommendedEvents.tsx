@@ -8,14 +8,17 @@ import { formatDate, formatTime, getInterestIcon } from '@/data/mockData';
 import { toast } from '@/components/ui/sonner';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useNavigate } from 'react-router-dom';
 
 const RecommendedEvents = () => {
   const { recommendedEvents, toggleRSVP, rsvpEvents, toggleEventReminder, eventReminders } = useAppContext();
   const [loadingRsvp, setLoadingRsvp] = useState<string | null>(null);
   const [loadingReminder, setLoadingReminder] = useState<string | null>(null);
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
 
-  const handleRsvp = (eventId: string) => {
+  const handleRsvp = (e: React.MouseEvent, eventId: string) => {
+    e.stopPropagation();
     setLoadingRsvp(eventId);
     setTimeout(() => {
       toggleRSVP(eventId);
@@ -23,7 +26,8 @@ const RecommendedEvents = () => {
     }, 500);
   };
   
-  const handleToggleReminder = (eventId: string) => {
+  const handleToggleReminder = (e: React.MouseEvent, eventId: string) => {
+    e.stopPropagation();
     setLoadingReminder(eventId);
     setTimeout(() => {
       toggleEventReminder(eventId);
@@ -39,6 +43,10 @@ const RecommendedEvents = () => {
         }
       );
     }, 500);
+  };
+
+  const handleCardClick = (eventId: string) => {
+    navigate(`/event/${eventId}`);
   };
 
   if (recommendedEvents.length === 0) {
@@ -66,6 +74,7 @@ const RecommendedEvents = () => {
             whileHover={{ scale: 1.01 }}
             transition={{ duration: 0.2 }}
             className="relative"
+            onClick={() => handleCardClick(event.id)}
           >
             <Card className="flex overflow-hidden h-24 border-gray-100 shadow-sm hover:shadow-md transition-shadow">
               {/* Event image */}
@@ -122,7 +131,7 @@ const RecommendedEvents = () => {
               <div className="flex flex-col justify-center items-end pr-2.5 space-y-2">
                 <motion.button
                   whileTap={{ scale: 0.9 }}
-                  onClick={() => handleRsvp(event.id)}
+                  onClick={(e) => handleRsvp(e, event.id)}
                   className={`px-2.5 py-1 rounded-full text-xs font-medium ${
                     isRsvped
                       ? "bg-green-50 text-green-600 border border-green-100"
@@ -144,7 +153,7 @@ const RecommendedEvents = () => {
                 
                 <motion.button
                   whileTap={{ scale: 0.9 }}
-                  onClick={() => handleToggleReminder(event.id)}
+                  onClick={(e) => handleToggleReminder(e, event.id)}
                   className={`text-xs p-1.5 rounded-full ${hasReminder ? 'bg-amber-50' : 'hover:bg-gray-50'}`}
                   disabled={loadingReminder === event.id}
                   title={hasReminder ? "Remove reminder" : "Set reminder"}
