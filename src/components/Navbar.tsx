@@ -19,7 +19,7 @@ const Navbar = () => {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-10">
       {/* Main Navigation */}
-      <div className="bg-white border-t border-gray-100 px-4 py-3 shadow-lg rounded-t-xl">
+      <div className="bg-white border-t border-gray-100 px-4 py-2 shadow-lg rounded-t-xl">
         <div className="flex justify-around items-center">
           <NavItem 
             to="/feed" 
@@ -73,14 +73,14 @@ interface NavItemProps {
 const NavItem = ({ to, label, isActive, showIndicator, children }: NavItemProps) => (
   <Link 
     to={to} 
-    className="flex flex-col items-center relative pt-2"
+    className="flex flex-col items-center relative pt-1"
   >
     <motion.div 
       whileTap={{ scale: 0.9 }}
-      className={`flex flex-col items-center w-16 py-1 ${isActive ? "text-roamio-blue" : "text-gray-500"}`}
+      className={`flex flex-col items-center w-14 py-1 ${isActive ? "text-roamio-blue" : "text-gray-500"}`}
       style={{ transformOrigin: "center center" }}
     >
-      <div className="h-6 w-6 mb-1">
+      <div className="h-5 w-5 mb-0.5">
         {children}
       </div>
       <span className="text-xs font-medium">{label}</span>
@@ -88,7 +88,7 @@ const NavItem = ({ to, label, isActive, showIndicator, children }: NavItemProps)
     {showIndicator && (
       <motion.div 
         layoutId="nav-indicator"
-        className="absolute -top-2 w-1.5 h-1.5 rounded-full bg-roamio-blue"
+        className="absolute -top-1 w-1 h-1 rounded-full bg-roamio-blue"
         initial={false}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
       />

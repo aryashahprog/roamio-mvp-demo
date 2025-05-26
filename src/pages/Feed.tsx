@@ -27,19 +27,16 @@ const Feed = () => {
   }
   
   return (
-    <div className="min-h-screen pb-24 bg-gray-50">
+    <div className="min-h-screen pb-20 bg-gray-50">
       <motion.div 
         initial={{ y: -10, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="bg-white border-b border-gray-100 p-4 sticky top-0 z-10 shadow-sm"
+        className="bg-white border-b border-gray-100 px-4 py-3 sticky top-0 z-10 shadow-sm"
       >
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Roamio</h1>
-            <p className="text-sm text-gray-500">Discover what's happening on campus</p>
-          </div>
-          <div className="w-8 h-8 bg-gradient-to-r from-roamio-blue to-blue-600 rounded-full flex items-center justify-center">
-            <span className="text-white text-xs font-bold">R</span>
+            <h1 className="text-xl font-bold text-gray-900">Roamio</h1>
+            <p className="text-xs text-gray-500">Discover what's happening on campus</p>
           </div>
         </div>
       </motion.div>
@@ -49,6 +46,7 @@ const Feed = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
+          className="pb-4"
         >
           {/* Nearby Events Carousel */}
           <div className="my-4">
