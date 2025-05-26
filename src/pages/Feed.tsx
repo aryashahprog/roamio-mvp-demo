@@ -31,10 +31,17 @@ const Feed = () => {
       <motion.div 
         initial={{ y: -10, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="bg-roamio-blue text-white p-4 sticky top-0 z-10 shadow-sm"
+        className="bg-white border-b border-gray-100 p-4 sticky top-0 z-10 shadow-sm"
       >
-        <h1 className="text-xl font-bold">Roamio</h1>
-        <p className="text-sm text-white/80">Discover campus events</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Roamio</h1>
+            <p className="text-sm text-gray-500">Discover what's happening on campus</p>
+          </div>
+          <div className="w-8 h-8 bg-gradient-to-r from-roamio-blue to-blue-600 rounded-full flex items-center justify-center">
+            <span className="text-white text-xs font-bold">R</span>
+          </div>
+        </div>
       </motion.div>
       
       {!isLoading && (
