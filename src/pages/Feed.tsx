@@ -31,12 +31,12 @@ const Feed = () => {
       <motion.div 
         initial={{ y: -10, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="bg-white border-b border-gray-100 px-4 py-3 sticky top-0 z-10 shadow-sm"
+        className="bg-white border-b border-gray-100 px-4 py-4 sticky top-0 z-10 shadow-sm"
       >
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-gray-900">Roamio</h1>
-            <p className="text-xs text-gray-500">Discover what's happening on campus</p>
+            <h1 className="text-2xl font-bold text-roamio-blue">Roamio</h1>
+            <p className="text-sm text-gray-500 mt-1">Discover what's happening on campus</p>
           </div>
         </div>
       </motion.div>
