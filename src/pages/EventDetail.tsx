@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import { toast } from "@/components/ui/sonner";
 import Navbar from "@/components/Navbar";
 import EventNotification from "@/components/EventNotification";
+import FriendsRsvp from "@/components/FriendsRsvp";
 import { useState } from "react";
 
 const EventDetail = () => {
@@ -161,6 +162,11 @@ const EventDetail = () => {
               <Users className="h-5 w-5 mr-3" />
               <span>{event.attendees || Math.floor(Math.random() * 50) + 10} attending</span>
             </div>
+          </div>
+          
+          {/* Friends RSVP section */}
+          <div className="mt-4">
+            <FriendsRsvp eventId={event.id} />
           </div>
           
           {/* Description */}

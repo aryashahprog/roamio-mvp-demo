@@ -22,13 +22,6 @@ const InterestSelector = ({ compact = false }: InterestSelectorProps) => {
 
   return (
     <div className={`max-w-md mx-auto px-6 py-${compact ? '2' : '8'} flex flex-col h-full`}>
-      {!compact && (
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold mb-2 text-roamio-blue">Welcome to Roamio</h1>
-          <p className="text-gray-600">Select your interests to personalize your event feed</p>
-        </div>
-      )}
-
       <div className={`grid grid-cols-2 gap-4 ${compact ? 'mb-4' : 'mb-12'}`}>
         {interestOptions.map((interest) => (
           <button

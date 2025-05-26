@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/sonner";
 import { useNavigate } from "react-router-dom";
+import FriendsRsvp from "@/components/FriendsRsvp";
 
 interface EventCardProps {
   event: Event;
@@ -40,10 +41,9 @@ const EventCard = ({ event }: EventCardProps) => {
   };
 
   const handleRSVP = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent navigating to event details when clicking RSVP
+    e.stopPropagation();
     setIsLoading(true);
     
-    // Simulate network request
     setTimeout(() => {
       toggleRSVP(event.id);
       setIsLoading(false);
@@ -56,7 +56,7 @@ const EventCard = ({ event }: EventCardProps) => {
   };
 
   const handleBookmark = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent navigating to event details when clicking bookmark
+    e.stopPropagation();
     bookmarkEvent(event.id);
     
     toast.success(isBookmarked ? "Event removed from bookmarks" : "Event saved to bookmarks", {
@@ -65,7 +65,7 @@ const EventCard = ({ event }: EventCardProps) => {
   };
 
   const handleShowDetails = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent navigating to event details when expanding the card
+    e.stopPropagation();
     setExpanded(!expanded);
   };
 
@@ -78,7 +78,7 @@ const EventCard = ({ event }: EventCardProps) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="mb-4"
+      className="mb-3"
       layout
       onClick={handleCardClick}
     >
@@ -106,7 +106,7 @@ const EventCard = ({ event }: EventCardProps) => {
           {/* Event Image */}
           {event.image ? (
             <motion.div 
-              className="relative w-full h-44"
+              className="relative w-full h-40"
               layoutId={`event-image-${event.id}`}
             >
               <img 
@@ -193,6 +193,9 @@ const EventCard = ({ event }: EventCardProps) => {
                 </div>
               </div>
             </div>
+            
+            {/* Friends RSVP section */}
+            <FriendsRsvp eventId={event.id} className="mb-3" />
             
             {/* Expandable content */}
             <AnimatePresence>
