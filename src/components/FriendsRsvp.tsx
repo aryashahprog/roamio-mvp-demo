@@ -1,6 +1,7 @@
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Users } from "lucide-react";
+import { useAppContext } from "@/contexts/AppContext";
 
 interface Friend {
   id: string;
@@ -14,19 +15,19 @@ interface FriendsRsvpProps {
 }
 
 const FriendsRsvp = ({ eventId, className = "" }: FriendsRsvpProps) => {
-  // Mock friends data - in a real app, this would come from an API
+  const { friends, rsvpEvents } = useAppContext();
+  
+  // Get friends who have RSVP'd to this event
   const getFriendsRsvped = (eventId: string): Friend[] => {
-    const allFriends = [
-      { id: "1", name: "Sarah Chen" },
-      { id: "2", name: "Mike Johnson" },
-      { id: "3", name: "Emma Wilson" },
-      { id: "4", name: "Alex Rodriguez" },
-      { id: "5", name: "Jenna Kim" },
-    ];
+    // For demo purposes, randomly assign some friends as having RSVP'd
+    if (friends.length === 0) return [];
     
-    // Randomly assign friends to events for demo
-    const friendsCount = Math.floor(Math.random() * 4) + 1;
-    return allFriends.slice(0, friendsCount);
+    const friendsCount = Math.min(friends.length, Math.floor(Math.random() * 3) + 1);
+    return friends.slice(0, friendsCount).map(friend => ({
+      id: friend.id,
+      name: friend.name,
+      avatar: friend.profilePicture
+    }));
   };
 
   const friendsRsvped = getFriendsRsvped(eventId);

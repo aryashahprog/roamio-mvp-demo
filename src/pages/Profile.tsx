@@ -6,14 +6,16 @@ import { Navigate } from "react-router-dom";
 import ProfileForm from "@/components/ProfileForm";
 import MyEvents from "@/components/MyEvents";
 import RecommendedEvents from "@/components/RecommendedEvents";
+import FriendRequests from "@/components/FriendRequests";
+import FriendsList from "@/components/FriendsList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, Calendar, Heart, Instagram, Linkedin, Bell, MessageSquare, Smile } from "lucide-react";
+import { User, Calendar, Heart, Instagram, Linkedin, Bell, MessageSquare, Smile, UserPlus } from "lucide-react";
 import InterestSelector from "@/components/InterestSelector";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
 const Profile = () => {
-  const { hasCompletedOnboarding, userProfile } = useAppContext();
+  const { hasCompletedOnboarding, userProfile, friendRequests } = useAppContext();
   const [activeTab, setActiveTab] = useState<string>("profile");
   const [greeting, setGreeting] = useState<string>("");
   
@@ -38,6 +40,8 @@ const Profile = () => {
     const name = userProfile.name ? `, ${userProfile.name.split(" ")[0]}` : "";
     setGreeting(`${timeGreeting}${name}!`);
   }, [userProfile.name]);
+
+  const pendingRequestsCount = friendRequests.filter(r => r.status === 'pending').length;
   
   return (
     <div className="min-h-screen pb-24 bg-gray-50">
@@ -48,7 +52,7 @@ const Profile = () => {
       
       <div className="p-4">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-5 bg-gray-100">
+          <TabsList className="grid w-full grid-cols-4 mb-5 bg-gray-100">
             <TabsTrigger value="profile" className="flex items-center gap-2">
               <User size={16} />
               <span>Details</span>
@@ -60,6 +64,15 @@ const Profile = () => {
             <TabsTrigger value="interests" className="flex items-center gap-2">
               <Heart size={16} />
               <span>Interests</span>
+            </TabsTrigger>
+            <TabsTrigger value="friends" className="flex items-center gap-2 relative">
+              <UserPlus size={16} />
+              <span>Friends</span>
+              {pendingRequestsCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                  {pendingRequestsCount}
+                </span>
+              )}
             </TabsTrigger>
           </TabsList>
           
@@ -168,6 +181,13 @@ const Profile = () => {
                 Select the types of events you're interested in
               </p>
               <InterestSelector compact />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="friends">
+            <div className="space-y-4">
+              <FriendRequests />
+              <FriendsList />
             </div>
           </TabsContent>
         </Tabs>

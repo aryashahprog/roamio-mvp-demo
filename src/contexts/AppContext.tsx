@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { mockEvents, Event, Interest } from "../data/mockData";
 import { toast } from "@/components/ui/sonner";
@@ -12,6 +13,25 @@ interface UserProfile {
     platform: 'instagram' | 'linkedin';
     url: string;
   };
+}
+
+// Friend request interfaces
+interface FriendRequest {
+  id: string;
+  fromUserId: string;
+  fromUserName: string;
+  fromUserPicture: string;
+  toUserId: string;
+  status: 'pending' | 'accepted' | 'rejected';
+  createdAt: string;
+}
+
+interface Friend {
+  id: string;
+  name: string;
+  profilePicture: string;
+  year: string;
+  major: string;
 }
 
 interface AppContextType {
@@ -41,6 +61,13 @@ interface AppContextType {
   // Event reminders
   eventReminders: string[];
   toggleEventReminder: (eventId: string) => void;
+  // Friend requests
+  friendRequests: FriendRequest[];
+  friends: Friend[];
+  sendFriendRequest: (toUserId: string, toUserName: string, toUserPicture: string) => void;
+  acceptFriendRequest: (requestId: string) => void;
+  rejectFriendRequest: (requestId: string) => void;
+  getSuggestedFriends: () => Friend[];
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -110,6 +137,18 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       major: "",
       profilePicture: "/placeholder.svg",
     };
+  });
+
+  // Friend requests state
+  const [friendRequests, setFriendRequests] = useState<FriendRequest[]>(() => {
+    const saved = localStorage.getItem("friendRequests");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Friends state
+  const [friends, setFriends] = useState<Friend[]>(() => {
+    const saved = localStorage.getItem("friends");
+    return saved ? JSON.parse(saved) : [];
   });
 
   // Set completed onboarding
@@ -215,6 +254,110 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     toast.success("Profile updated successfully!");
   };
 
+  // Send friend request
+  const sendFriendRequest = (toUserId: string, toUserName: string, toUserPicture: string) => {
+    const newRequest: FriendRequest = {
+      id: `req_${Date.now()}`,
+      fromUserId: "current_user",
+      fromUserName: userProfile.name || "You",
+      fromUserPicture: userProfile.profilePicture,
+      toUserId,
+      status: 'pending',
+      createdAt: new Date().toISOString()
+    };
+
+    setFriendRequests((prev) => {
+      const updated = [...prev, newRequest];
+      localStorage.setItem("friendRequests", JSON.stringify(updated));
+      return updated;
+    });
+
+    toast.success(`Friend request sent to ${toUserName}!`);
+  };
+
+  // Accept friend request
+  const acceptFriendRequest = (requestId: string) => {
+    setFriendRequests((prev) => {
+      const request = prev.find(r => r.id === requestId);
+      if (!request) return prev;
+
+      // Add to friends list
+      const newFriend: Friend = {
+        id: request.fromUserId,
+        name: request.fromUserName,
+        profilePicture: request.fromUserPicture,
+        year: "Junior", // Mock data
+        major: "Computer Science" // Mock data
+      };
+
+      setFriends((prevFriends) => {
+        const updated = [...prevFriends, newFriend];
+        localStorage.setItem("friends", JSON.stringify(updated));
+        return updated;
+      });
+
+      // Update request status
+      const updated = prev.map(r => 
+        r.id === requestId ? { ...r, status: 'accepted' as const } : r
+      );
+      localStorage.setItem("friendRequests", JSON.stringify(updated));
+      
+      toast.success(`You're now friends with ${request.fromUserName}!`);
+      return updated;
+    });
+  };
+
+  // Reject friend request
+  const rejectFriendRequest = (requestId: string) => {
+    setFriendRequests((prev) => {
+      const updated = prev.map(r => 
+        r.id === requestId ? { ...r, status: 'rejected' as const } : r
+      );
+      localStorage.setItem("friendRequests", JSON.stringify(updated));
+      return updated;
+    });
+
+    toast("Friend request declined");
+  };
+
+  // Get suggested friends (mock data)
+  const getSuggestedFriends = (): Friend[] => {
+    const mockSuggestions: Friend[] = [
+      {
+        id: "user_1",
+        name: "Sarah Chen",
+        profilePicture: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop",
+        year: "Sophomore",
+        major: "Biology"
+      },
+      {
+        id: "user_2", 
+        name: "Mike Johnson",
+        profilePicture: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop",
+        year: "Junior",
+        major: "Engineering"
+      },
+      {
+        id: "user_3",
+        name: "Emma Wilson",
+        profilePicture: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop",
+        year: "Senior",
+        major: "Psychology"
+      }
+    ];
+
+    // Filter out existing friends and pending requests
+    const friendIds = friends.map(f => f.id);
+    const pendingRequestIds = friendRequests
+      .filter(r => r.status === 'pending')
+      .map(r => r.toUserId);
+
+    return mockSuggestions.filter(suggestion => 
+      !friendIds.includes(suggestion.id) && 
+      !pendingRequestIds.includes(suggestion.id)
+    );
+  };
+
   // Generate recommended events based on interests and past interactions
   useEffect(() => {
     if (selectedInterests.length > 0 || Object.keys(rsvpEvents).length > 0) {
@@ -301,7 +444,13 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     bookmarkEvent,
     recommendedEvents,
     eventReminders,
-    toggleEventReminder
+    toggleEventReminder,
+    friendRequests,
+    friends,
+    sendFriendRequest,
+    acceptFriendRequest,
+    rejectFriendRequest,
+    getSuggestedFriends
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
